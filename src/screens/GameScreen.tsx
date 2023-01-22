@@ -117,14 +117,14 @@ const styles: {[key: string] : React.CSSProperties} = {
 
     rightScreen:{
         // border:'solid',
-        position:"relative",
+        // position:"relative",
         flex: 1,
         margin:0,
         padding:0, 
         display:"flex",
         minHeight:'100%',
         alignItems: "center",
-        // justifyContent: "center",
+        justifyContent: "center",
     },
 }
 

@@ -15,7 +15,7 @@ const Prepare = (props:any) => {
             <p style={styles.string}>左の画面のカメラに全身が映る位置を確認してね</p>
             <button onClick={startGame}>start</button>
         </div>
-    )
+    );
 };
 
 const styles: {[key: string] : React.CSSProperties} = {
@@ -27,7 +27,8 @@ const styles: {[key: string] : React.CSSProperties} = {
         minHeight: "100%",
         position:'absolute',
         top:0,
-        // opacity: '50%',
+        left:0,
+        opacity: '50%',
     },
     string:{
         color: 'white',
