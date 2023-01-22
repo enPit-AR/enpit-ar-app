@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import bgImage from '../utils/images/StartScreenBack.gif';
+import bgImage from '../utils/images/common/StartScreenBack.gif';
 import Camera from "../components/GameScreen/Camera";
 import Timer from "../components/GameScreen/Timer";
 import Prepare from "../components/GameScreen/Prepare";
+import Enemy from "../utils/images/enemy/sample_enemy.png";
 
 const GameScreen = () => {
     const [url, setUrl] = useState<string|null>(null); //スクショを管理
@@ -33,7 +34,7 @@ const GameScreen = () => {
     return(
         <>
             <div style={styles.mainScreen}>
-            <img src={bgImage} alt="" style={styles.back_img}></img>
+            <img src={bgImage} alt="" style={styles.back_img}/>
                 <div style={styles.leftScreen}>
                     <div style={styles.cameraArea}>
                     <Camera setUrl={setUrl} setIsScreenShot={setIsScreenShot}/>
@@ -56,8 +57,15 @@ const GameScreen = () => {
                         <>
                         {/* ここにゲームコンテンツの要素を入れていく */}
                         {/* Timerはコンテンツ終了後に遷移ボタンだけ押す　or もうこの画面で結果まで表示してしまう． */}
-                            <Timer />
-                            <button onClick={changeScreenShotFlag}>delete</button>
+                            <div style={styles.gameContents}>
+                                <button onClick={changeScreenShotFlag}>delete</button>
+                                <div style={styles.enemyArea}>
+                                    <img src={Enemy} alt="enemy" />
+                                </div>
+                            
+                                <Timer />
+                                {/* <button onClick={changeScreenShotFlag}>delete</button> */}
+                            </div>
                         </>
                         }
                     </>
@@ -107,6 +115,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         // border:"solid",
         borderColor:"red",
         position: 'absolute',
+        display:'flex',
         top: 15,
         right: 0,
         width:'100%',
@@ -117,7 +126,7 @@ const styles: {[key: string] : React.CSSProperties} = {
 
     rightScreen:{
         // border:'solid',
-        // position:"relative",
+        position:"relative",
         flex: 1,
         margin:0,
         padding:0, 
@@ -125,6 +134,16 @@ const styles: {[key: string] : React.CSSProperties} = {
         minHeight:'100%',
         alignItems: "center",
         justifyContent: "center",
+    },
+    enemyArea:{
+        // position:"absolute",
+        border:"solid",
+        margin: 5,
+        padding:10,
+        backgroundColor:'gray',
+    },
+    gameContents:{
+        alignContent:"center"
     },
 }
 

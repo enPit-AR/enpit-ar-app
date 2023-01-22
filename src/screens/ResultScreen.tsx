@@ -1,5 +1,5 @@
 import React from "react";
-import bgImage from '../utils/images/StartScreenBack.gif';
+import bgImage from '../utils/images/common/StartScreenBack.gif';
 import ReturnButton from "../components/Common/ReturnButton ";
 import { useLocation } from "react-router-dom";
 

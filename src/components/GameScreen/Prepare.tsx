@@ -25,7 +25,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         backgroundColor: "black",
         width: '100%',
         minHeight: "100%",
-        position:'absolute',
+        position:'fixed',
         top:0,
         left:0,
         opacity: '50%',

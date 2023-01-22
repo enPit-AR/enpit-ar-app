@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import '../styles/BackgroundColor.css';
-import bgImage from '../utils/images/StartScreenBack.gif';
+import bgImage from '../utils/images/common/StartScreenBack.gif';
 import ReturnButton from "../components/Common/ReturnButton ";
 
 const StartScreen = () => {
