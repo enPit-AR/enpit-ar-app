@@ -13,7 +13,7 @@ const Prepare = (props:any) => {
         // ここのタグとか文字をいじって見やすく分かりやすくする
         <div style={styles.screen}>
             <p style={styles.string}>左の画面のカメラに全身が映る位置を確認してね</p>
-            <button onClick={startGame}>start</button>
+            <button onClick={startGame}>ゲームスタート</button>
         </div>
     );
 };
@@ -28,7 +28,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         position:'fixed',
         top:0,
         left:0,
-        opacity: '50%',
+        opacity: '80%',
     },
     string:{
         color: 'white',

@@ -1,6 +1,8 @@
 import React from "react";
 import { useState,  useRef, useCallback, } from "react";
 import Webcam from "react-webcam";
+import CorrectJudge from "./CorrectJudge";
+import Calculation from "./JointCal";
 
 const Camera = (props:any)  => {
     const webcamRef = useRef<Webcam>(null);
@@ -14,10 +16,12 @@ const Camera = (props:any)  => {
     
     //写真の撮影
     // このタイミングでcanvasの値をtrueにしてcanvasの表示を行う
-    const screenShot = () => {
+    const screenShot = async () => {
         props.setIsScreenShot(true);
-        console.log('push')
-        capture();
+        console.log('take photo')
+            capture();
+            var cosinResult=Calculation();
+            CorrectJudge(await cosinResult);
     }
     props.setUrl(url);
 
