@@ -1,16 +1,7 @@
 {
     "wards_list": 
     [
-    {
-        "Words": "APPLE",
-        "Level": 1,
-        "Point": 6
-    },
-    {
-        "Words": "BALL",
-        "Level": 1,
-        "Point": 5
-    },
+
     {
         "Words": "CAR",
         "Level": 1,
