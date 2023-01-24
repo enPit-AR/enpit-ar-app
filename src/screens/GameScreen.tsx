@@ -321,7 +321,7 @@ const GameScreen = () => {
                                     }
                                 </>
     
-                                {/* <button onClick={stopGame}>ストップ</button> */}
+                                <button onClick={stopGame}>ストップ</button>
 
                             </div>
                             {/* <p>your answer is </p>
