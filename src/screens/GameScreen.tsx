@@ -239,8 +239,15 @@ const GameScreen = () => {
                     {/* 撮影までの秒数 */}
                     {isStart&&
                     <div style={styles.absoluteArea}>
-                        <h2 style={styles.count3}>{countdown}</h2>
-                        <h1 style={styles.word}>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb)}</h1>
+
+                        {!isclear ? 
+                        <>
+                            <h2 style={styles.count3}>{countdown}</h2>
+                            <h1 style={styles.word}>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb)}</h1>
+                        </>
+                        :
+                        <></>
+                        }
                     </div>
                     }
                     <div style={styles.cameraArea}>
@@ -277,56 +284,56 @@ const GameScreen = () => {
                         <>
                         {/* ここにゲームコンテンツの要素を入れていく */}
                             <div style={styles.gameContents}>
-
-
                                 {/* gamestart */}
-                                <button onClick={gameStart} style={styles.startButton}>スタート</button>
-
+                                {!isclear ? 
+                                    <>
+                                        <button onClick={gameStart} style={styles.startButton}>スタート</button>
+                                    </>
+                                    :
+                                    <></>
+                                }
                                 {/* canvas delete */}
                                 {/* <button onClick={changeScreenShotFlag}>delete</button> */}
 
 
-                                {/* <div style={styles.enemyArea}>
-                                    <img src={Enemy} alt="enemy" />
+                                <div style={styles.enemyArea} >
+                                    <img src={Enemy} alt="enemy" style={styles.enemy}/>
                                     <img src={url!} id='img' alt="Screenshot" style={styles.img} />
-                                </div> */}
-
-                                <img src={Enemy} alt="enemy" style={styles.enemyArea}/>  {/* 敵のイラスト */}
+                                </div>
                                 
                                 
                                 <>
                                     {isclear ? 
                                         <>
-                                          <h3 style={styles.clearString}>
-                                              クリア!
-                                          </h3>
-                                          <div style={styles.resultArea}>
-                                              <button onClick={() => {
-                                                  console.log('button is pushed')
-                                                  navigate('/ResultScreen')
-                                                  navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
-                                                  // gameStart()
-                                                  }} style={styles.resultButton}><ruby>結果<rt>けっか</rt></ruby>へ</button>
-                                          </div>
+                                        <h3 style={styles.clearString}>
+                                            クリア!
+                                        </h3>
+                                        <div style={styles.resultArea}>
+                                            <button onClick={() => {
+                                                console.log('button is pushed')
+                                                navigate('/ResultScreen')
+                                                navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
+                                                }} style={styles.resultButton}><ruby>結果<rt>けっか</rt></ruby>へ</button>
+                                        </div>
                                         </>
-                                        :
-                                        isStart ?
-                                            <>
-                                                <h1 style={styles.string}>
-                                                    <span style={styles.corStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
-                                                </h1>
-                                                <div style={styles.judge}>
-                                                    <p id="cor" style={styles.true}>
-                                                        {"○"}
-                                                    </p>
-                                                    <p id="uncor" style={styles.false}>
-                                                        {"×"}
-                                                    </p>
-                                                </div>
-                                            </>
-                                            : 
-                                            <></>
-                                        }
+                                    :
+                                    isStart ?
+                                        <>
+                                            <h1 style={styles.wordString}>
+                                                <span style={styles.CorStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
+                                            </h1>
+                                            <div style={styles.judge}>
+                                                <p id="cor" style={styles.correct}>
+                                                    {"○"}
+                                                </p>
+                                                <p id="uncor" style={styles.uncorrect}>
+                                                    {"×"}
+                                                </p>
+                                            </div>
+                                        </>
+                                        : 
+                                        <></>
+                                    }
                                 </>
                                 {!isclear ? 
                                   <>
@@ -347,13 +354,6 @@ const GameScreen = () => {
             </div>
         </>
     )
-};
-
-const CorStyle = {
-    color: "red",
-    margin:0,
-    padding:0,
-    fontSize:80,
 };
 
 const styles: {[key: string] : React.CSSProperties} = {
@@ -462,21 +462,33 @@ const styles: {[key: string] : React.CSSProperties} = {
         justifyContent: "center",
     },
     enemyArea:{
-        // position:"absolute",
+        position:"relative",
+        width:'80vh',
+        height:'60vh',
         border:"solid",
         margin: 5,
         padding:10,
         backgroundColor:'gray',
     },
-    string:{
+    enemy:{
+        position:"absolute",
+        top:0,
+        left:0,
+        width:'100%',
+        height:'100%',
+    },
+    gameContents:{
+        alignContent:"center"
+    },
+    wordString:{
         position: 'fixed',
-        bottom: '0%',
+        top: '0%',
         left: '75%',
         transform: 'translateX(-50%)',
         fontSize:80,
         fontFamily: 'monospace',
     },
-    corStyle:{
+    CorStyle:{
         color: "red",
         margin:0,
         padding:0,
@@ -488,42 +500,14 @@ const styles: {[key: string] : React.CSSProperties} = {
         left: '25%',
         top: '50%',
         transform: 'translate(-50%, -50%)',
-    },
-    true: {
-        display: "none",
-        fontSize: 800,
-        color: 'red',
-    },
-    false: {
-        display: "none",
-        fontSize: 700,
-        color: 'blue',
-    },
-    gameContents:{
-        alignContent:"center"
-    },
-    string:{
-        position: 'fixed',
-        top: '0%',
-        left: '75%',
-        transform: 'translateX(-50%)',
-        fontSize:80,
-        fontFamily: 'monospace',
-    },
-    judge: {
-        margin: 0,
-        position: 'fixed',
-        left: '25%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
         zIndex: 30
     },
-    true: {
+    correct: {
         display: "none",
         fontSize: 500,
         color: 'red'
     },
-    false: {
+    uncorrect: {
         display: "none",
         fontSize: 500,
         color: 'blue',
@@ -562,7 +546,6 @@ const styles: {[key: string] : React.CSSProperties} = {
     clearString: {
         position: 'fixed',
         bottom: '5%',
-
         left: '75%',
         transform: 'translateX(-50%)',
         fontSize:80,
@@ -575,7 +558,6 @@ const styles: {[key: string] : React.CSSProperties} = {
         right: '2%'
     },
     resultButton: {
-
         backgroundColor: 'green',
         color: 'white',
         borderRadius: 10,
