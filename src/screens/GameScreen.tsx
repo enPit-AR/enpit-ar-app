@@ -298,7 +298,9 @@ const GameScreen = () => {
                                 }}
                                 style={styles.camera}
                             />
-                    <canvas id="pose" style={styles.pose}></canvas>
+                    {isStart && 
+                        <canvas id="pose" style={styles.pose}></canvas>
+                    }
                     {isScreenShot ?
                         <>
                             {/* <canvas id="pose" style={styles.pose}></canvas> */}
@@ -393,7 +395,7 @@ const GameScreen = () => {
 
 const styles: {[key: string] : React.CSSProperties} = {
     mainScreen:{
-        border:'solid',
+        // border:'solid',
         display: "flex", 
         margin:0,
         padding:0, 
@@ -410,7 +412,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin:0,
         padding:0, 
         position: 'relative',
-        border: "solid",
+        // border: "solid",
         display: 'flex',
         flexFlow: "column",
         alignItems: "center",
@@ -435,7 +437,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         padding: 30,
         backgroundColor: 'white',
         borderRadius: 10,
-        border: 'solid',
+        // border: 'solid',
         fontSize: 40,
         fontFamily: 'monospace',
     },
@@ -455,7 +457,7 @@ const styles: {[key: string] : React.CSSProperties} = {
     },
     cameraArea:{
         position:"relative",
-        border: 'solid',
+        // border: 'solid',
         padding:0,
         margin:0,
         zIndex: 10
@@ -469,7 +471,7 @@ const styles: {[key: string] : React.CSSProperties} = {
     pose:{
         margin:0,
         paddingLeft:0,
-        border:"solid",
+        // border:"solid",
         borderColor:"red",
         position: 'absolute',
         display:'flex',
@@ -502,7 +504,7 @@ const styles: {[key: string] : React.CSSProperties} = {
     },
 
     rightScreen:{
-        border:'solid',
+        // border:'solid',
         position:"relative",
         flex: 1,
         margin:0,
@@ -516,7 +518,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         position:"relative",
         width:'80vh',
         height:'60vh',
-        border:"solid",
+        // border:"solid",
         margin: 5,
         padding:10,
         backgroundColor:'gray',
