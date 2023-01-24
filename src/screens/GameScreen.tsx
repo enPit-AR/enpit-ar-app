@@ -301,9 +301,9 @@ const GameScreen = () => {
                                     :
                                     isStart ?
                                         <div>
-                                            <p style={styles.string}>
+                                            <h1 style={styles.string}>
                                                 <span style={styles.CorStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
-                                            </p>
+                                            </h1>
                                             <div style={styles.judge}>
                                                 <p id="cor" style={styles.true}>
                                                     {"○"}
@@ -397,8 +397,11 @@ const styles: {[key: string] : React.CSSProperties} = {
         transform: 'translateX(-50%)',
         fontSize: 80,
         fontFamily: 'monospace',
-        // backgroundColor: 'white',
-        // color: 'blue'
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        //border: 'solid',
+        color: 'red'
     },
     cameraArea:{
         position:"relative",
