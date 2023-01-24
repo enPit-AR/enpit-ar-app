@@ -2,13 +2,13 @@ import React, { useState,useCallback, useEffect, useRef } from "react";
 import { useStopwatch } from "react-timer-hook";
 import useSound from "use-sound";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
-import Camera from "../components/GameScreen/Camera";
+// import Camera from "../components/GameScreen/Camera";
 import Webcam from "react-webcam";
 import Calculation from "../components/GameScreen/JointCal";
 import CorrectJudge from "../components/GameScreen/CorrectJudge";
 import Prepare from "../components/GameScreen/Prepare";
 import MakeQ from "../components/GameScreen/Question/MakeQ";
-import Timer from "../components/GameScreen/Timer";
+// import Timer from "../components/GameScreen/Timer";
 
 import corSe from "../utils/sounds/corSe.mp3" //正解音（ピンポーン）
 import corSe2 from "../utils/sounds/corSe2.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
@@ -82,8 +82,8 @@ const GameScreen = () => {
     const [isScreenShot, setIsScreenShot] = useState<boolean>(false); //canvasの表示切り替えに必要
     const [AnswerLetter, setAnswerLetter] = useState<string>(''); //判定された文字を受け取る
 
-    const { nmb, increment, resetNmb } = UseNmb(vocabulary.length); // 解いた問題数
-    const [ text, setText ] = useState<string>(''); // タイピングゲームに用いているテキスト, 位置付けは回答者の回答
+    const { nmb, increment} = UseNmb(vocabulary.length); // 解いた問題数
+    //const [ text, setText ] = useState<string>(''); // タイピングゲームに用いているテキスト, 位置付けは回答者の回答
     const [ isclear, setIsclear ] = useState<boolean>(false); // ゲームをクリアしたかの判定、設定した問題数を解いたかどうか
     const [ isStart, setIsStart ] = useState<boolean>(false); // ゲームをスタートしたかどうか
     const { corNmb, corIncrement, setCorNmb } = UseCorNmb(0);
@@ -148,12 +148,6 @@ const GameScreen = () => {
         setIsScreenShot(!isScreenShot);
     };
 
-    //ゲームストップ画面に説明画面を表示
-    const stopGame = () => {
-        setIsCheckedPosition(true); //説明画面を出す
-        pause(); //ゲーム止める時に時間も停止する
-    };
-
           //1か0でかえす関数,引数は現在答えている文字
     const judgePose = (currentLetter: string) => {
         if (AnswerLetter === currentLetter) {
@@ -168,7 +162,14 @@ const GameScreen = () => {
         start(); // timerStart
         setIsStart(true); // game開始
         setIsclear(false); //isclearをfalseにすることで初期化する
-    }
+    };
+    const gameStop = () => {
+        pause();
+        setIsAvailable(false);
+        setIsCheckedPosition(true); //説明画面を出す
+    };
+
+    
 
     //不正解なら不正解の表示と音声
     //正解なら正解エフェクトを出して次の文字へ．
@@ -176,7 +177,6 @@ const GameScreen = () => {
         if (judgePose(vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb))) {
             showCor();
             corIncrement();
-            // setIsAvailable(false);
             if (corNmb >= vocabulary[questionOrder[nmb]].Words.length) {
                 increment();
                 setCorNmb(1);
@@ -260,11 +260,8 @@ const GameScreen = () => {
                         {/* Timerはコンテンツ終了後に遷移ボタンだけ押す */}
                             <div style={styles.gameContents}>
 
-                                {/* gamestart */}
-                                <button onClick={gameStart}>start</button>
-
-                                {/* canvas delete */}
-                                <button onClick={changeScreenShotFlag}>delete</button>
+                                {/* 停止させたフラグをtrueにして自動化に戻す */}
+                                {/* <button onClick={() => setIsAvailable(true)}>FlagTrue</button> */}
 
                                 <div style={styles.enemyArea}>
                                     <img src={Enemy} alt="enemy" />
@@ -282,26 +279,28 @@ const GameScreen = () => {
                                     
                                     :
                                     isStart ?
-                                        <div style={styles.string}>
-                                            <p>
-                                                <span style={styles.CorStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
-                                            </p>
-                                            <div style={styles.string}>
-                                                <p id="cor" style={{display: "none"}}>
-                                                    {"⭕️"}
+                                        <>
+                                            <h1 style={styles.string}>
+                                                <span style={styles.corStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
+                                            </h1>
+                                            <div style={styles.judge}>
+                                                <p id="cor" style={styles.true}>
+                                                    {"○"}
                                                 </p>
-                                                <p id="uncor" style={{display: "none"}}>
-                                                    {"❌"}
+                                                <p id="uncor" style={styles.false}>
+                                                    {"×"}
                                                 </p>
                                             </div>
-                                            
-                                        </div>
-
+                                        </>
                                         : 
                                         <></>
                                     }
                                 </>
-                                <button onClick={stopGame}>ストップ</button>
+                                {!isAvailable ? (
+                                    <button onClick={gameStart}>スタート</button>
+                                    ) : (
+                                    <button onClick={gameStop}>ストップ</button>
+                                )}
 
                             </div>
                             <p>your answer is </p>
@@ -357,7 +356,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin:0,
         paddingLeft:0,
         transform: 'scale(-1,1)',
-        border:"solid",
+        // border:"solid",
         borderColor:"red",
         position: 'absolute',
         display:'flex',
@@ -389,6 +388,37 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin: 5,
         padding:10,
         backgroundColor:'gray',
+    },
+    string:{
+        position: 'fixed',
+        bottom: '0%',
+        left: '75%',
+        transform: 'translateX(-50%)',
+        fontSize:80,
+        fontFamily: 'monospace',
+    },
+    corStyle:{
+        color: "red",
+        margin:0,
+        padding:0,
+        fontSize:80,
+    },
+    judge: {
+        margin: 0,
+        position: 'fixed',
+        left: '25%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+    },
+    true: {
+        display: "none",
+        fontSize: 800,
+        color: 'red',
+    },
+    false: {
+        display: "none",
+        fontSize: 700,
+        color: 'blue',
     },
     gameContents:{
         alignContent:"center"
