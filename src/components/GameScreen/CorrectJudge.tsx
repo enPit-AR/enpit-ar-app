@@ -1,7 +1,7 @@
 import CorrectData from "../../json/CorrectData.json";
 
 
-async function CorrectJudge(cosinScore:number[]){
+function CorrectJudge(cosinScore:number[]){
     const correctData = CorrectData.CorrectDataList;
 
     var Answer = 0;

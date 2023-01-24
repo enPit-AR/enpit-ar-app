@@ -7,6 +7,7 @@ import Calculation from "./JointCal";
 const Camera = (props:any)  => {
     const webcamRef = useRef<Webcam>(null);
     const [url, setUrl] = useState<string | undefined>(undefined);
+    const [AnswerLetter, setAnswerLetter] = useState<string>('');
     const capture = useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot();
         if (imageSrc) {
@@ -21,9 +22,11 @@ const Camera = (props:any)  => {
         console.log('take photo')
             capture();
             var cosinResult=Calculation();
-            CorrectJudge(await cosinResult);
+            var AnswerLetter = CorrectJudge(await cosinResult);
+            setAnswerLetter(AnswerLetter);
     }
     props.setUrl(url);
+    props.setAnswerLetter(AnswerLetter);
 
     return (
         <>
