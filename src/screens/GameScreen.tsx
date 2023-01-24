@@ -1,22 +1,23 @@
 import React, { useState,useCallback, useEffect, useRef } from "react";
 import { useStopwatch } from "react-timer-hook";
+import { useNavigate } from 'react-router-dom';
 import useSound from "use-sound";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
-import Camera from "../components/GameScreen/Camera";
+// import Camera from "../components/GameScreen/Camera";
 import Webcam from "react-webcam";
 import Calculation from "../components/GameScreen/JointCal";
 import CorrectJudge from "../components/GameScreen/CorrectJudge";
 import Prepare from "../components/GameScreen/Prepare";
 import MakeQ from "../components/GameScreen/Question/MakeQ";
-import Timer from "../components/GameScreen/Timer";
+// import Timer from "../components/GameScreen/Timer";
 
 import corSe from "../utils/sounds/corSe.mp3" //正解音（ピンポーン）
 import corSe2 from "../utils/sounds/corSe2.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
 import uncorSe from "../utils/sounds/uncorSe.mp3";//不正解音（ブッ）
 
-import Enemy from "../utils/images/enemy/sample_enemy.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
-import { useNavigate } from 'react-router-dom';
-
+import APPLE from "../utils/images/enemy/APPLE.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
+import BALL from "../utils/images/enemy/BALL.png"
+import CAR from "../utils/images/enemy/CAR.png"
 
 let { vocabulary, questionOrder } = MakeQ(); // 問題と出題順番の生成
 
@@ -77,18 +78,19 @@ const useInterval = (callback: Function, delay?: number | null) => {
 
 const GameScreen = () => {
     const webcamRef = useRef<Webcam>(null);
+    const navigate = useNavigate();
     const [url, setUrl] = useState<string|null>(null); //スクショを管理
     const [isCheckedPosition, setIsCheckedPosition] = useState<boolean>(true); //ゲーム画面に遷移時のカメラ位置確認に必要
-    const { seconds, minutes, isRunning, start, pause, reset } =useStopwatch({ autoStart: false }); //タイマーの管理
+    const { seconds, minutes, start, pause,  } =useStopwatch({ autoStart: false }); //タイマーの管理
     const [isScreenShot, setIsScreenShot] = useState<boolean>(false); //canvasの表示切り替えに必要
     const [AnswerLetter, setAnswerLetter] = useState<string>(''); //判定された文字を受け取る
 
-    const { nmb, increment, resetNmb } = UseNmb(vocabulary.length); // 解いた問題数
-    const [ text, setText ] = useState<string>(''); // タイピングゲームに用いているテキスト, 位置付けは回答者の回答
+    const { nmb, increment} = UseNmb(vocabulary.length); // 解いた問題数
+    //const [ text, setText ] = useState<string>(''); // タイピングゲームに用いているテキスト, 位置付けは回答者の回答
     const [ isclear, setIsclear ] = useState<boolean>(false); // ゲームをクリアしたかの判定、設定した問題数を解いたかどうか
     const [ isStart, setIsStart ] = useState<boolean>(false); // ゲームをスタートしたかどうか
     const { corNmb, corIncrement, setCorNmb } = UseCorNmb(0);
-    const [delay, setDelay] = useState<number>(1);
+    const [delay, ] = useState<number>(1);
     const [ isAvailable, setIsAvailable ] = useState<boolean>(false); //次のイベントが使用できる状態か
     const [countdown, setCountdown] = useState<number>(3); //キャプチャまでのカウントダウン
 
@@ -115,19 +117,19 @@ const GameScreen = () => {
     }
 
     //Canvsの用意と描画
-    const canvas = document.getElementById("canvas") as HTMLCanvasElement;        
-    let imagePath = url;
-    draw(canvas,imagePath);
-    function draw(canvas:HTMLCanvasElement,imagePath:string|null){
-        const image = new Image();
-        image.addEventListener("load", async ()=>{
-            canvas.width = image.naturalWidth;
-            canvas.height = image.naturalHeight;
-            const ctx = canvas.getContext("2d")!;
-            ctx.drawImage(image, 0, 0,);
-        });
-        image.src = imagePath!;
-    };
+    // const canvas = document.getElementById("canvas") as HTMLCanvasElement;        
+    // let imagePath = url;
+    // draw(canvas,imagePath);
+    // function draw(canvas:HTMLCanvasElement,imagePath:string|null){
+    //     const image = new Image();
+    //     image.addEventListener("load", async ()=>{ 
+    //         canvas.width = image.naturalWidth;
+    //         canvas.height = image.naturalHeight;
+    //         const ctx = canvas.getContext("2d")!;
+    //         ctx.drawImage(image, 0, 0,);
+    //     });
+    //     image.src = imagePath!;
+    // };
 
     useInterval(
         () => {
@@ -149,12 +151,6 @@ const GameScreen = () => {
         setIsScreenShot(!isScreenShot);
     };
 
-    //ゲームストップ画面に説明画面を表示
-    const stopGame = () => {
-        setIsCheckedPosition(true); //説明画面を出す
-        pause(); //ゲーム止める時に時間も停止する
-    };
-
           //1か0でかえす関数,引数は現在答えている文字
     const judgePose = (currentLetter: string) => {
         if (AnswerLetter === currentLetter) {
@@ -169,7 +165,14 @@ const GameScreen = () => {
         start(); // timerStart
         setIsStart(true); // game開始
         setIsclear(false); //isclearをfalseにすることで初期化する
-    }
+    };
+    const gameStop = () => {
+        pause();
+        setIsAvailable(false);
+        setIsCheckedPosition(true); //説明画面を出す
+    };
+
+    
 
     //不正解なら不正解の表示と音声
     //正解なら正解エフェクトを出して次の文字へ．
@@ -177,7 +180,6 @@ const GameScreen = () => {
         if (judgePose(vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb))) {
             showCor();
             corIncrement();
-            // setIsAvailable(false);
             if (corNmb >= vocabulary[questionOrder[nmb]].Words.length) {
                 increment();
                 setCorNmb(1);
@@ -212,7 +214,19 @@ const GameScreen = () => {
         document.getElementById("uncor")!.style.display = "none";
     }
     
-    const navigate = useNavigate();
+    var enemy = vocabulary[questionOrder[nmb]].Words; 
+    const showEnemy = () => {
+        if ('APPLE' === enemy){
+            return APPLE
+        }else if('BALL' === enemy){
+            return BALL
+        }else if('CAR' === enemy){
+            return CAR
+        }
+    };
+
+    var Enemy = showEnemy();
+
 
 
 
@@ -262,14 +276,15 @@ const GameScreen = () => {
                         :
                         <>
                         {/* ここにゲームコンテンツの要素を入れていく */}
-                        {/* Timerはコンテンツ終了後に遷移ボタンだけ押す */}
                             <div style={styles.gameContents}>
+
 
                                 {/* gamestart */}
                                 <button onClick={gameStart} style={styles.startButton}>スタート</button>
 
                                 {/* canvas delete */}
                                 {/* <button onClick={changeScreenShotFlag}>delete</button> */}
+
 
                                 {/* <div style={styles.enemyArea}>
                                     <img src={Enemy} alt="enemy" />
@@ -281,50 +296,50 @@ const GameScreen = () => {
                                 
                                 <>
                                     {isclear ? 
-                                        <div>
-                                        <h3 style={styles.clearString}>
-                                            クリア!
-                                        </h3>
-                                        <div style={styles.resultArea}>
-                                            <button onClick={() => {
-                                                console.log('button is pushed')
-                                                navigate('/ResultScreen')
-                                                navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
-                                                // gameStart()
-                                                }} style={styles.resultButton}><ruby>結果<rt>けっか</rt></ruby>へ</button>
-                                        </div>
-                                        {/* <div>
-                                            cleartime: {('00' + minutes).slice(-2)}:{('00' + seconds).slice(-2)}
-                                        </div> */}
-                                        </div>
-                                    
-                                    :
-                                    isStart ?
-                                        <div>
-                                            <h1 style={styles.string}>
-                                                <span style={styles.CorStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
-                                            </h1>
-                                            <div style={styles.judge}>
-                                                <p id="cor" style={styles.true}>
-                                                    {"○"}
-                                                </p>
-                                                <p id="uncor" style={styles.false}>
-                                                    {"×"}
-                                                </p>
-                                            </div>
-                                            
-                                        </div>
-
-                                        : 
-                                        <></>
-                                    }
+                                        <>
+                                          <h3 style={styles.clearString}>
+                                              クリア!
+                                          </h3>
+                                          <div style={styles.resultArea}>
+                                              <button onClick={() => {
+                                                  console.log('button is pushed')
+                                                  navigate('/ResultScreen')
+                                                  navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
+                                                  // gameStart()
+                                                  }} style={styles.resultButton}><ruby>結果<rt>けっか</rt></ruby>へ</button>
+                                          </div>
+                                        </>
+                                        :
+                                        isStart ?
+                                            <>
+                                                <h1 style={styles.string}>
+                                                    <span style={styles.corStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
+                                                </h1>
+                                                <div style={styles.judge}>
+                                                    <p id="cor" style={styles.true}>
+                                                        {"○"}
+                                                    </p>
+                                                    <p id="uncor" style={styles.false}>
+                                                        {"×"}
+                                                    </p>
+                                                </div>
+                                            </>
+                                            : 
+                                            <></>
+                                        }
                                 </>
-    
-                                <button onClick={stopGame} style={styles.stopButton}>ストップ</button>
-
+                                {!isclear ? 
+                                  <>
+                                      {!isAvailable ? (
+                                          <button onClick={gameStart}>スタート</button>
+                                          ) : (
+                                          <button onClick={gameStop}>ストップ</button>
+                                      )}
+                                  </>
+                                   :
+                                   <></>
+                                   }
                             </div>
-                            {/* <p>your answer is </p>
-                            {AnswerLetter} */}
                         </>
                         }
                     </>
@@ -420,7 +435,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin:0,
         paddingLeft:0,
         transform: 'scale(-1,1)',
-        border:"solid",
+        // border:"solid",
         borderColor:"red",
         position: 'absolute',
         display:'flex',
@@ -452,6 +467,37 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin: 5,
         padding:10,
         backgroundColor:'gray',
+    },
+    string:{
+        position: 'fixed',
+        bottom: '0%',
+        left: '75%',
+        transform: 'translateX(-50%)',
+        fontSize:80,
+        fontFamily: 'monospace',
+    },
+    corStyle:{
+        color: "red",
+        margin:0,
+        padding:0,
+        fontSize:80,
+    },
+    judge: {
+        margin: 0,
+        position: 'fixed',
+        left: '25%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+    },
+    true: {
+        display: "none",
+        fontSize: 800,
+        color: 'red',
+    },
+    false: {
+        display: "none",
+        fontSize: 700,
+        color: 'blue',
     },
     gameContents:{
         alignContent:"center"
@@ -516,6 +562,7 @@ const styles: {[key: string] : React.CSSProperties} = {
     clearString: {
         position: 'fixed',
         bottom: '5%',
+
         left: '75%',
         transform: 'translateX(-50%)',
         fontSize:80,
@@ -528,6 +575,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         right: '2%'
     },
     resultButton: {
+
         backgroundColor: 'green',
         color: 'white',
         borderRadius: 10,

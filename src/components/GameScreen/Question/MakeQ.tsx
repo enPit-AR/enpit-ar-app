@@ -1,4 +1,3 @@
-import React from "react";
 import Vocabulary from "../../../json/Vocabulary.json"; // 単語帳
 import shuffleArray from "./ShuffleArray";
 
