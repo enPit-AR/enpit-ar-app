@@ -222,8 +222,12 @@ const GameScreen = () => {
             <img src={bgImage} alt="" style={styles.back_img}/>
                 <div style={styles.leftScreen}>
                     {/* 撮影までの秒数 */}
-                    {countdown} <br />
-                    {vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb)}
+                    {isStart&&
+                    <div style={styles.absoluteArea}>
+                        <h2 style={styles.count3}>{countdown}</h2>
+                        <h1 style={styles.word}>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb)}</h1>
+                    </div>
+                    }
                     <div style={styles.cameraArea}>
                     <Webcam
                                 audio={false}
@@ -251,9 +255,9 @@ const GameScreen = () => {
                 <div style={styles.rightScreen}>
                     {/* isCheckedPositionがfalseになったらゲームのコンテンツが見えるようになる．isCheckedPositionの初期値はtrue */}
                     <>{isCheckedPosition ?
-                        <>
+                        <div style={styles.prepareArea}>
                             <Prepare setIsCheckedPosition={setIsCheckedPosition} />
-                        </>
+                        </div>
                         :
                         <>
                         {/* ここにゲームコンテンツの要素を入れていく */}
@@ -261,14 +265,29 @@ const GameScreen = () => {
                             <div style={styles.gameContents}>
 
                                 {/* gamestart */}
-                                <button onClick={gameStart}>start</button>
+                                <button onClick={gameStart} style={styles.startButton}>start</button>
 
                                 {/* canvas delete */}
-                                <button onClick={changeScreenShotFlag}>delete</button>
+                                {/* <button onClick={changeScreenShotFlag}>delete</button> */}
 
-                                <div style={styles.enemyArea}>
+                                {/* <div style={styles.enemyArea}>
                                     <img src={Enemy} alt="enemy" />
                                     <img src={url!} id='img' alt="Screenshot" style={styles.img} />
+                                </div> */}
+
+                                <img src={Enemy} alt="enemy" />  {/* 敵のイラスト */}
+                                <h1 style={styles.string}>
+                                    <span style={CorStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
+                                </h1>
+                                <div style={styles.judge}>
+                                    {/* <p id="cor" style={{display: "none"}}> */}
+                                    <p id="cor" style={styles.true}>
+                                        {"○"}
+                                    </p>
+                                    <p id="uncor" style={styles.false}>
+                                    {/* <p id="uncor" style={{display: "none"}}> */}
+                                        {"×"}
+                                    </p>
                                 </div>
                                 
                                 <>
@@ -301,11 +320,12 @@ const GameScreen = () => {
                                         <></>
                                     }
                                 </>
-                                <button onClick={stopGame}>ストップ</button>
+    
+                                {/* <button onClick={stopGame}>ストップ</button> */}
 
                             </div>
-                            <p>your answer is </p>
-                            {AnswerLetter}
+                            {/* <p>your answer is </p>
+                            {AnswerLetter} */}
                         </>
                         }
                     </>
@@ -313,6 +333,13 @@ const GameScreen = () => {
             </div>
         </>
     )
+};
+
+const CorStyle = {
+    color: "red",
+    margin:0,
+    padding:0,
+    fontSize:80,
 };
 
 const styles: {[key: string] : React.CSSProperties} = {
@@ -341,11 +368,45 @@ const styles: {[key: string] : React.CSSProperties} = {
         justifyContent: "center",
         minHeight:'100%',
     },
+    absoluteArea: {
+        position: 'relative',
+        zIndex: 20
+    },
+    prepareArea: {
+        position: 'relative',
+        zIndex: 30
+    },
+    count3: {
+        //display: 'inline-block',
+        margin: 0,
+        position: 'fixed',
+        top: '0%',
+        left: '50%',
+        transform: 'translateX(-100%)',
+        padding: 30,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        border: 'solid',
+        fontSize: 40,
+        fontFamily: 'monospace',
+    },
+    word: {
+        margin: 0,
+        position: 'fixed',
+        top: '3%',
+        left: '25%',
+        transform: 'translateX(-50%)',
+        fontSize: 80,
+        fontFamily: 'monospace',
+        // backgroundColor: 'white',
+        // color: 'blue'
+    },
     cameraArea:{
         position:"relative",
         border: 'solid',
         padding:0,
         margin:0,
+        zIndex: 10
         // display:"none",
     },
     camera:{
@@ -393,6 +454,47 @@ const styles: {[key: string] : React.CSSProperties} = {
     gameContents:{
         alignContent:"center"
     },
+    string:{
+        position: 'fixed',
+        top: '0%',
+        left: '75%',
+        transform: 'translateX(-50%)',
+        fontSize:80,
+        fontFamily: 'monospace',
+    },
+    judge: {
+        margin: 0,
+        position: 'fixed',
+        left: '25%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+    },
+    true: {
+        display: "none",
+        fontSize: 800,
+        color: 'red',
+    },
+    false: {
+        display: "none",
+        fontSize: 700,
+        color: 'blue',
+    },
+    startButton: {
+        backgroundColor: 'gray',
+        color: 'white',
+        borderRadius: 10,
+        border: 'solid black',
+        fontSize: 30,
+        paddingRight: 30,
+        paddingLeft: 30,
+        cursor: 'pointer',
+        width: 'fit-content',
+        height: "fit-content",
+        position: 'fixed',
+        left: '75%',
+        transform: 'translateX(-50%)',
+        bottom: '3%'
+    }
 }
 
 export default GameScreen;
