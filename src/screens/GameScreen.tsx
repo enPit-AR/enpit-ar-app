@@ -176,7 +176,7 @@ const GameScreen = () => {
         if (judgePose(vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb))) {
             showCor();
             corIncrement();
-            setIsAvailable(false);
+            // setIsAvailable(false);
             if (corNmb >= vocabulary[questionOrder[nmb]].Words.length) {
                 increment();
                 setCorNmb(1);
