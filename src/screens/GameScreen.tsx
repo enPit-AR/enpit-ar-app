@@ -287,7 +287,7 @@ const GameScreen = () => {
                                 {/* gamestart */}
                                 {!isclear ? 
                                     <>
-                                        <button onClick={gameStart} style={styles.startButton}>スタート</button>
+                                        {/* <button onClick={gameStart} style={styles.startButton}>スタート</button> */}
                                     </>
                                     :
                                     <></>
@@ -296,10 +296,6 @@ const GameScreen = () => {
                                 {/* <button onClick={changeScreenShotFlag}>delete</button> */}
 
 
-                                <div style={styles.enemyArea} >
-                                    <img src={Enemy} alt="enemy" style={styles.enemy}/>
-                                    <img src={url!} id='img' alt="Screenshot" style={styles.img} />
-                                </div>
                                 
                                 
                                 <>
@@ -322,6 +318,11 @@ const GameScreen = () => {
                                             <h1 style={styles.wordString}>
                                                 <span style={styles.CorStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
                                             </h1>
+                                            <h2 style={styles.countUp}>{('00' + minutes).slice(-2)}:{('00' + seconds).slice(-2)}</h2>
+                                            <div style={styles.enemyArea} >
+                                                <img src={Enemy} alt="enemy" style={styles.enemy}/>
+                                                <img src={url!} id='img' alt="Screenshot" style={styles.img} />
+                                            </div>
                                             <div style={styles.judge}>
                                                 <p id="cor" style={styles.correct}>
                                                     {"○"}
@@ -407,7 +408,7 @@ const styles: {[key: string] : React.CSSProperties} = {
     word: {
         margin: 0,
         position: 'fixed',
-        top: '3%',
+        top: '0%',
         left: '25%',
         transform: 'translateX(-50%)',
         fontSize: 80,
@@ -415,8 +416,8 @@ const styles: {[key: string] : React.CSSProperties} = {
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 10,
-        //border: 'solid',
-        color: 'red'
+        color: 'red',
+        border: 'solid black',
     },
     cameraArea:{
         position:"relative",
@@ -469,10 +470,11 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin: 5,
         padding:10,
         backgroundColor:'gray',
+        marginTop: 100,
     },
     enemy:{
         position:"absolute",
-        top:0,
+        top: '0%',
         left:0,
         width:'100%',
         height:'100%',
@@ -487,6 +489,19 @@ const styles: {[key: string] : React.CSSProperties} = {
         transform: 'translateX(-50%)',
         fontSize:80,
         fontFamily: 'monospace',
+    },
+    countUp: {
+        margin: 0,
+        position: 'fixed',
+        top: '0%',
+        left: '100%',
+        fontSize:40,
+        fontFamily: 'monospace',
+        transform: 'translateX(-100%)',
+        padding: 30,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        border: 'solid',
     },
     CorStyle:{
         color: "red",
@@ -512,22 +527,22 @@ const styles: {[key: string] : React.CSSProperties} = {
         fontSize: 500,
         color: 'blue',
     },
-    startButton: {
-        backgroundColor: 'gray',
-        color: 'white',
-        borderRadius: 10,
-        border: 'solid black',
-        fontSize: 30,
-        paddingRight: 30,
-        paddingLeft: 30,
-        cursor: 'pointer',
-        width: 'fit-content',
-        height: "fit-content",
-        position: 'fixed',
-        left: '75%',
-        transform: 'translateX(-50%)',
-        bottom: '10%'
-    },
+    // startButton: {
+    //     backgroundColor: 'gray',
+    //     color: 'white',
+    //     borderRadius: 10,
+    //     border: 'solid black',
+    //     fontSize: 30,
+    //     paddingRight: 30,
+    //     paddingLeft: 30,
+    //     cursor: 'pointer',
+    //     width: 'fit-content',
+    //     height: "fit-content",
+    //     position: 'fixed',
+    //     left: '75%',
+    //     transform: 'translateX(-50%)',
+    //     bottom: '10%'
+    // },
     stopButton: {
         backgroundColor: 'gray',
         color: 'white',
