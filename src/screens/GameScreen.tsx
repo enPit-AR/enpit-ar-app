@@ -19,7 +19,6 @@ import APPLE from "../utils/images/enemy/APPLE.png"; //敵画像の読み込み�
 import BALL from "../utils/images/enemy/BALL.png"
 import CAR from "../utils/images/enemy/CAR.png"
 
-
 let { vocabulary, questionOrder } = MakeQ(); // 問題と出題順番の生成
 
 //****************************************************************************//
@@ -215,7 +214,6 @@ const GameScreen = () => {
         document.getElementById("uncor")!.style.display = "none";
     }
     
-
     var enemy = vocabulary[questionOrder[nmb]].Words; 
     const showEnemy = () => {
         if ('APPLE' === enemy){
@@ -232,14 +230,19 @@ const GameScreen = () => {
 
 
 
+
     return(
         <>
             <div style={styles.mainScreen}>
             <img src={bgImage} alt="" style={styles.back_img}/>
                 <div style={styles.leftScreen}>
                     {/* 撮影までの秒数 */}
-                    {countdown} <br />
-                    {vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb)}
+                    {isStart&&
+                    <div style={styles.absoluteArea}>
+                        <h2 style={styles.count3}>{countdown}</h2>
+                        <h1 style={styles.word}>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb)}</h1>
+                    </div>
+                    }
                     <div style={styles.cameraArea}>
                     <Webcam
                                 audio={false}
@@ -267,77 +270,76 @@ const GameScreen = () => {
                 <div style={styles.rightScreen}>
                     {/* isCheckedPositionがfalseになったらゲームのコンテンツが見えるようになる．isCheckedPositionの初期値はtrue */}
                     <>{isCheckedPosition ?
-                        <>
+                        <div style={styles.prepareArea}>
                             <Prepare setIsCheckedPosition={setIsCheckedPosition} />
-                        </>
+                        </div>
                         :
                         <>
                         {/* ここにゲームコンテンツの要素を入れていく */}
-                        {/* Timerはコンテンツ終了後に遷移ボタンだけ押す */}
                             <div style={styles.gameContents}>
 
-                                {/* 停止させたフラグをtrueにして自動化に戻す */}
-                                {/* <button onClick={() => setIsAvailable(true)}>FlagTrue</button> */}
 
-                                <div style={styles.enemyArea}>
+                                {/* gamestart */}
+                                <button onClick={gameStart} style={styles.startButton}>スタート</button>
+
+                                {/* canvas delete */}
+                                {/* <button onClick={changeScreenShotFlag}>delete</button> */}
+
+
+                                {/* <div style={styles.enemyArea}>
                                     <img src={Enemy} alt="enemy" />
                                     <img src={url!} id='img' alt="Screenshot" style={styles.img} />
-                                </div>
+                                </div> */}
+
+                                <img src={Enemy} alt="enemy" style={styles.enemyArea}/>  {/* 敵のイラスト */}
+                                
                                 
                                 <>
                                     {isclear ? 
                                         <>
-                                            <h3 style={styles.clearString}>
-                                                クリア!
-                                            </h3>
-                                            <div style={styles.resultArea}>
-                                                <button onClick={() => {
-                                                    console.log('button is pushed')
-                                                    navigate('/ResultScreen')
-                                                    navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
-                                        
-                                                    }} style={styles.resultButton}><ruby>結果<rt>けっか</rt></ruby>へ</button>
-                                            </div>
+                                          <h3 style={styles.clearString}>
+                                              クリア!
+                                          </h3>
+                                          <div style={styles.resultArea}>
+                                              <button onClick={() => {
+                                                  console.log('button is pushed')
+                                                  navigate('/ResultScreen')
+                                                  navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
+                                                  // gameStart()
+                                                  }} style={styles.resultButton}><ruby>結果<rt>けっか</rt></ruby>へ</button>
+                                          </div>
                                         </>
-                                    
-                                    :
-                                    isStart ?
-                                        <>
-                                            <h1 style={styles.string}>
-                                                <span style={styles.corStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
-                                            </h1>
-                                            <div style={styles.judge}>
-                                                <p id="cor" style={styles.true}>
-                                                    {"○"}
-                                                </p>
-                                                <p id="uncor" style={styles.false}>
-                                                    {"×"}
-                                                </p>
-                                            </div>
-                                        </>
-                                        : 
-                                        <></>
-                                    }
+                                        :
+                                        isStart ?
+                                            <>
+                                                <h1 style={styles.string}>
+                                                    <span style={styles.corStyle}>{vocabulary[questionOrder[nmb]].Words.slice(0, corNmb-1)}</span>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1)}
+                                                </h1>
+                                                <div style={styles.judge}>
+                                                    <p id="cor" style={styles.true}>
+                                                        {"○"}
+                                                    </p>
+                                                    <p id="uncor" style={styles.false}>
+                                                        {"×"}
+                                                    </p>
+                                                </div>
+                                            </>
+                                            : 
+                                            <></>
+                                        }
                                 </>
-                                {/* {!isAvailable ? (
-                                    <button onClick={gameStart}>スタート</button>
-                                    ) : (
-                                    <button onClick={gameStop}>ストップ</button>
-                                )} */}
                                 {!isclear ? 
-                                <>
-                                    {!isAvailable ? (
-                                        <button onClick={gameStart}>スタート</button>
-                                        ) : (
-                                        <button onClick={gameStop}>ストップ</button>
-                                    )}
-                                </>
-                                    :
-                                    <></>}
-
+                                  <>
+                                      {!isAvailable ? (
+                                          <button onClick={gameStart}>スタート</button>
+                                          ) : (
+                                          <button onClick={gameStop}>ストップ</button>
+                                      )}
+                                  </>
+                                   :
+                                   <></>
+                                   }
                             </div>
-                            {/* <p>your answer is </p> */}
-                            {/* {AnswerLetter} */}
                         </>
                         }
                     </>
@@ -345,6 +347,13 @@ const GameScreen = () => {
             </div>
         </>
     )
+};
+
+const CorStyle = {
+    color: "red",
+    margin:0,
+    padding:0,
+    fontSize:80,
 };
 
 const styles: {[key: string] : React.CSSProperties} = {
@@ -373,11 +382,48 @@ const styles: {[key: string] : React.CSSProperties} = {
         justifyContent: "center",
         minHeight:'100%',
     },
+    absoluteArea: {
+        position: 'relative',
+        zIndex: 20
+    },
+    prepareArea: {
+        position: 'relative',
+        zIndex: 30
+    },
+    count3: {
+        //display: 'inline-block',
+        margin: 0,
+        position: 'fixed',
+        top: '0%',
+        left: '50%',
+        transform: 'translateX(-100%)',
+        padding: 30,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        border: 'solid',
+        fontSize: 40,
+        fontFamily: 'monospace',
+    },
+    word: {
+        margin: 0,
+        position: 'fixed',
+        top: '3%',
+        left: '25%',
+        transform: 'translateX(-50%)',
+        fontSize: 80,
+        fontFamily: 'monospace',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        //border: 'solid',
+        color: 'red'
+    },
     cameraArea:{
         position:"relative",
         border: 'solid',
         padding:0,
         margin:0,
+        zIndex: 10
         // display:"none",
     },
     camera:{
@@ -456,21 +502,80 @@ const styles: {[key: string] : React.CSSProperties} = {
     gameContents:{
         alignContent:"center"
     },
-    resultArea:{
+    string:{
         position: 'fixed',
-        bottom: '2%',
-        right: '2%'
+        top: '0%',
+        left: '75%',
+        transform: 'translateX(-50%)',
+        fontSize:80,
+        fontFamily: 'monospace',
     },
-    clearString:{
+    judge: {
+        margin: 0,
         position: 'fixed',
-        bottom: '0%',
+        left: '25%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 30
+    },
+    true: {
+        display: "none",
+        fontSize: 500,
+        color: 'red'
+    },
+    false: {
+        display: "none",
+        fontSize: 500,
+        color: 'blue',
+    },
+    startButton: {
+        backgroundColor: 'gray',
+        color: 'white',
+        borderRadius: 10,
+        border: 'solid black',
+        fontSize: 30,
+        paddingRight: 30,
+        paddingLeft: 30,
+        cursor: 'pointer',
+        width: 'fit-content',
+        height: "fit-content",
+        position: 'fixed',
+        left: '75%',
+        transform: 'translateX(-50%)',
+        bottom: '10%'
+    },
+    stopButton: {
+        backgroundColor: 'gray',
+        color: 'white',
+        borderRadius: 10,
+        border: 'solid black',
+        fontSize: 30,
+        paddingRight: 30,
+        paddingLeft: 30,
+        cursor: 'pointer',
+        width: 'fit-content',
+        height: "fit-content",
+        position: 'fixed',
+        right: '3%',
+        bottom: '10%'
+    },
+    clearString: {
+        position: 'fixed',
+        bottom: '5%',
+
         left: '75%',
         transform: 'translateX(-50%)',
         fontSize:80,
         color: 'green',
         fontFamily: 'monospace',
     },
-    resultButton:{
+    resultArea: {
+        position: 'fixed',
+        bottom: '2%',
+        right: '2%'
+    },
+    resultButton: {
+
         backgroundColor: 'green',
         color: 'white',
         borderRadius: 10,
@@ -483,7 +588,6 @@ const styles: {[key: string] : React.CSSProperties} = {
         height: "fit-content",
         fontFamily: 'monospace',
     },
-
 }
 
 export default GameScreen;
