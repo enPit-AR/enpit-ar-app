@@ -2,18 +2,26 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, } from "react";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
+import Confetti from 'react-confetti';
+import useWindowSize from 'react-use/lib/useWindowSize';
 
 const ResultScreen = () => {
+    const { width, height } = useWindowSize()
     const navigate = useNavigate();
     const location = useLocation();
     const [selectId, ] = useState<{ min: number, sec: number }>(location.state as { min: number, sec: number })
     return(
         <div>
+            <div style={styles.piece}>
+                <Confetti
+                    width={width}
+                    height={height}
+                    wind={0.01}
+                    gravity={0.07}
+                    />
+            </div>
             <div style={styles.screen}>
                 <img src={bgImage} alt="" style={styles.back_img}></img>
-                {/* <p>result</p>
-                <p>time</p>
-                <p>score</p> */}
                 <h1 style={styles.greeting}>おつかれさま！</h1>
                 <div style={styles.rusultArea}>
                     <h2 style={styles.explain}>今回のきろく</h2>
@@ -35,6 +43,11 @@ const styles: {[key: string] : React.CSSProperties} = {
     screen: {
         padding:0,
         paddingBottom:0,
+    },
+    piece:{
+        position: "fixed",
+        top: 0,
+        width: '100%',
     },
     back_img: {
         position:'fixed',
