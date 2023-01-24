@@ -1,19 +1,10 @@
 {
     "wards_list": 
-    [{
-        "Words": "RED",
-        "Level": 1,
-        "Point": 4
-    },
+    [
     {
         "Words": "APPLE",
         "Level": 1,
         "Point": 6
-    },
-    {
-        "Words": "CAR",
-        "Level": 1,
-        "Point": 4
     },
     {
         "Words": "BALL",
@@ -21,33 +12,8 @@
         "Point": 5
     },
     {
-        "Words": "CITY",
+        "Words": "CAR",
         "Level": 1,
-        "Point": 5
-    },
-    {
-        "Words": "FRIEND",
-        "Level": 2,
-        "Point": 8
-    },
-    {
-        "Words": "JAPANESE",
-        "Level": 2,
-        "Point": 10
-    },
-    {
-        "Words": "ENGLISH",
-        "Level": 2,
-        "Point": 9
-    },
-    {
-        "Words": "NIGHT",
-        "Level": 2,
-        "Point": 7
-    },
-    {
-        "Words": "BASEBALL",
-        "Level": 2,
-        "Point": 10
+        "Point": 4
     }]
 }

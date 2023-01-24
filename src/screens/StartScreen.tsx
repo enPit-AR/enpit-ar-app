@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import '../styles/BackgroundColor.css';
 import bgImage from '../utils/images/common/StartScreenBack.gif';
-import ReturnButton from "../components/Common/ReturnButton ";
+// import ReturnButton from "../components/Common/ReturnButton ";
 
 const StartScreen = () => {
     const navigate = useNavigate();
@@ -29,7 +29,7 @@ const StartScreen = () => {
                         }} style={styles.explainButton}>あそびかた</button>
                 </div>
                 {/* あとで消すからこいつは適当に．結果画面を見るためだけのデモ用*/}
-                <ReturnButton render={'/ResultScreen'} screen={'結果'}/>
+                {/* <ReturnButton render={'/ResultScreen'} screen={'結果'}/> */}
             </div>
         </>
     );
