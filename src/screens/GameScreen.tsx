@@ -1,5 +1,6 @@
 import React, { useState,useCallback, useEffect, useRef } from "react";
 import { useStopwatch } from "react-timer-hook";
+import { useNavigate } from 'react-router-dom';
 import useSound from "use-sound";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
 // import Camera from "../components/GameScreen/Camera";
@@ -14,7 +15,9 @@ import corSe from "../utils/sounds/corSe.mp3" //正解音（ピンポーン）
 import corSe2 from "../utils/sounds/corSe2.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
 import uncorSe from "../utils/sounds/uncorSe.mp3";//不正解音（ブッ）
 
-import Enemy from "../utils/images/enemy/sample_enemy.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
+import APPLE from "../utils/images/enemy/APPLE.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
+import BALL from "../utils/images/enemy/BALL.png"
+import CAR from "../utils/images/enemy/CAR.png"
 
 
 let { vocabulary, questionOrder } = MakeQ(); // 問題と出題順番の生成
@@ -76,9 +79,10 @@ const useInterval = (callback: Function, delay?: number | null) => {
 
 const GameScreen = () => {
     const webcamRef = useRef<Webcam>(null);
+    const navigate = useNavigate();
     const [url, setUrl] = useState<string|null>(null); //スクショを管理
     const [isCheckedPosition, setIsCheckedPosition] = useState<boolean>(true); //ゲーム画面に遷移時のカメラ位置確認に必要
-    const { seconds, minutes, isRunning, start, pause, reset } =useStopwatch({ autoStart: false }); //タイマーの管理
+    const { seconds, minutes, start, pause,  } =useStopwatch({ autoStart: false }); //タイマーの管理
     const [isScreenShot, setIsScreenShot] = useState<boolean>(false); //canvasの表示切り替えに必要
     const [AnswerLetter, setAnswerLetter] = useState<string>(''); //判定された文字を受け取る
 
@@ -87,7 +91,7 @@ const GameScreen = () => {
     const [ isclear, setIsclear ] = useState<boolean>(false); // ゲームをクリアしたかの判定、設定した問題数を解いたかどうか
     const [ isStart, setIsStart ] = useState<boolean>(false); // ゲームをスタートしたかどうか
     const { corNmb, corIncrement, setCorNmb } = UseCorNmb(0);
-    const [delay, setDelay] = useState<number>(1);
+    const [delay, ] = useState<number>(1);
     const [ isAvailable, setIsAvailable ] = useState<boolean>(false); //次のイベントが使用できる状態か
     const [countdown, setCountdown] = useState<number>(3); //キャプチャまでのカウントダウン
 
@@ -212,6 +216,18 @@ const GameScreen = () => {
     }
     
 
+    var enemy = vocabulary[questionOrder[nmb]].Words; 
+    const showEnemy = () => {
+        if ('APPLE' === enemy){
+            return APPLE
+        }else if('BALL' === enemy){
+            return BALL
+        }else if('CAR ' === enemy){
+            return CAR
+        }
+    };
+
+    var Enemy = showEnemy();
 
 
 
@@ -271,10 +287,17 @@ const GameScreen = () => {
                                 <>
                                     {isclear ? 
                                         <>
-                                                CLEAR!
-                                            <>
-                                                cleartime: {('00' + minutes).slice(-2)}:{('00' + seconds).slice(-2)}
-                                            </>
+                                            <h3 style={styles.clearString}>
+                                                クリア!
+                                            </h3>
+                                            <div style={styles.resultArea}>
+                                                <button onClick={() => {
+                                                    console.log('button is pushed')
+                                                    navigate('/ResultScreen')
+                                                    navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
+                                        
+                                                    }} style={styles.resultButton}><ruby>結果<rt>けっか</rt></ruby>へ</button>
+                                            </div>
                                         </>
                                     
                                     :
@@ -296,15 +319,25 @@ const GameScreen = () => {
                                         <></>
                                     }
                                 </>
-                                {!isAvailable ? (
+                                {/* {!isAvailable ? (
                                     <button onClick={gameStart}>スタート</button>
                                     ) : (
                                     <button onClick={gameStop}>ストップ</button>
-                                )}
+                                )} */}
+                                {!isclear ? 
+                                <>
+                                    {!isAvailable ? (
+                                        <button onClick={gameStart}>スタート</button>
+                                        ) : (
+                                        <button onClick={gameStop}>ストップ</button>
+                                    )}
+                                </>
+                                    :
+                                    <></>}
 
                             </div>
-                            <p>your answer is </p>
-                            {AnswerLetter}
+                            {/* <p>your answer is </p> */}
+                            {/* {AnswerLetter} */}
                         </>
                         }
                     </>
@@ -423,6 +456,34 @@ const styles: {[key: string] : React.CSSProperties} = {
     gameContents:{
         alignContent:"center"
     },
+    resultArea:{
+        position: 'fixed',
+        bottom: '2%',
+        right: '2%'
+    },
+    clearString:{
+        position: 'fixed',
+        bottom: '0%',
+        left: '75%',
+        transform: 'translateX(-50%)',
+        fontSize:80,
+        color: 'green',
+        fontFamily: 'monospace',
+    },
+    resultButton:{
+        backgroundColor: 'green',
+        color: 'white',
+        borderRadius: 10,
+        border: 'solid white',
+        fontSize: 30,
+        paddingRight: 30,
+        paddingLeft: 30,
+        cursor: 'pointer',
+        width: 'fit-content',
+        height: "fit-content",
+        fontFamily: 'monospace',
+    },
+
 }
 
 export default GameScreen;
