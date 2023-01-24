@@ -118,19 +118,19 @@ const GameScreen = () => {
     }
 
     //Canvsの用意と描画
-    const canvas = document.getElementById("canvas") as HTMLCanvasElement;        
-    let imagePath = url;
-    draw(canvas,imagePath);
-    function draw(canvas:HTMLCanvasElement,imagePath:string|null){
-        const image = new Image();
-        image.addEventListener("load", async ()=>{
-            canvas.width = image.naturalWidth;
-            canvas.height = image.naturalHeight;
-            const ctx = canvas.getContext("2d")!;
-            ctx.drawImage(image, 0, 0,);
-        });
-        image.src = imagePath!;
-    };
+    // const canvas = document.getElementById("canvas") as HTMLCanvasElement;        
+    // let imagePath = url;
+    // draw(canvas,imagePath);
+    // function draw(canvas:HTMLCanvasElement,imagePath:string|null){
+    //     const image = new Image();
+    //     image.addEventListener("load", async ()=>{
+    //         canvas.width = image.naturalWidth;
+    //         canvas.height = image.naturalHeight;
+    //         const ctx = canvas.getContext("2d")!;
+    //         ctx.drawImage(image, 0, 0,);
+    //     });
+    //     image.src = imagePath!;
+    // };
 
     useInterval(
         () => {
