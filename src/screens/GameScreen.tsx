@@ -123,7 +123,7 @@ const GameScreen = () => {
     // draw(canvas,imagePath);
     // function draw(canvas:HTMLCanvasElement,imagePath:string|null){
     //     const image = new Image();
-    //     image.addEventListener("load", async ()=>{
+    //     image.addEventListener("load", async ()=>{ 
     //         canvas.width = image.naturalWidth;
     //         canvas.height = image.naturalHeight;
     //         const ctx = canvas.getContext("2d")!;
@@ -222,7 +222,7 @@ const GameScreen = () => {
             return APPLE
         }else if('BALL' === enemy){
             return BALL
-        }else if('CAR ' === enemy){
+        }else if('CAR' === enemy){
             return CAR
         }
     };
