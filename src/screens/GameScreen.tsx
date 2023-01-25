@@ -102,7 +102,6 @@ const GameScreen = () => {
     const [playCorSe] = useSound(corSe); //1文字正解音
     const [playCorSe2] = useSound(corSe2); //任意の単語の最後の文字を答えた時に鳴る
     const [playUncorSe] = useSound(uncorSe); //不正解音
-
     //camera 
     const capture = useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot();
@@ -376,9 +375,9 @@ const GameScreen = () => {
                                 {!isclear ? 
                                   <>
                                       {!isAvailable ? (
-                                          <button onClick={gameStart}>スタート</button>
+                                          <button onClick={gameStart} style={styles.start_stop}>スタート</button>
                                           ) : (
-                                          <button onClick={gameStop}>ストップ</button>
+                                          <button onClick={gameStop} style={styles.start_stop}>ストップ</button>
                                       )}
                                   </>
                                    :
@@ -452,7 +451,10 @@ const styles: {[key: string] : React.CSSProperties} = {
         fontFamily: 'monospace',
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 10,
+        paddingTop: 1,
+        paddingBottom: 1,
+        paddingRight: 20,
+        paddingLeft: 20,
         color: 'red',
         border: 'solid black',
     },
@@ -638,6 +640,18 @@ const styles: {[key: string] : React.CSSProperties} = {
         height: "fit-content",
         fontFamily: 'monospace',
     },
+    start_stop: {
+        backgroundColor: 'gray',
+        color: 'white',
+        borderRadius: 10,
+        border: 'solid black',
+        fontSize: 30,
+        paddingRight: 30,
+        paddingLeft: 30,
+        cursor: 'pointer',
+        width: 'fit-content',
+        height: "fit-content",
+    }
 }
 
 export default GameScreen;
