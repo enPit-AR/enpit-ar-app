@@ -11,13 +11,18 @@ import Prepare from "../components/GameScreen/Prepare";
 import MakeQ from "../components/GameScreen/Question/MakeQ";
 // import Timer from "../components/GameScreen/Timer";
 
-import corSe from "../utils/sounds/corSe.mp3" //正解音（ピンポーン）
+import corSe from "../utils/sounds/corSe.mp3" ;//正解音（ピンポーン）
 import corSe2 from "../utils/sounds/corSe2.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
 import uncorSe from "../utils/sounds/uncorSe.mp3";//不正解音（ブッ）
 
 import APPLE from "../utils/images/enemy/APPLE.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
-import BALL from "../utils/images/enemy/BALL.png"
-import CAR from "../utils/images/enemy/CAR.png"
+import BALL from "../utils/images/enemy/BALL.png";
+import CAR from "../utils/images/enemy/CAR.png";
+import A from "../utils/images/pose/A.png";
+import B from "../utils/images/pose/B.png";
+import C from "../utils/images/pose/C.png";
+import R from "../utils/images/pose/R.png";
+
 
 let { vocabulary, questionOrder } = MakeQ(); // 問題と出題順番の生成
 
@@ -116,7 +121,7 @@ const GameScreen = () => {
         setAnswerLetter(AnswerLetter);
     }
 
-    //Canvsの用意と描画
+    //画面静止用Canvsの用意と描画
     // const canvas = document.getElementById("canvas") as HTMLCanvasElement;        
     // let imagePath = url;
     // draw(canvas,imagePath);
@@ -214,6 +219,7 @@ const GameScreen = () => {
         document.getElementById("uncor")!.style.display = "none";
     }
     
+    //答える単語に該当する敵画像を表示する
     var enemy = vocabulary[questionOrder[nmb]].Words; 
     const showEnemy = () => {
         if ('APPLE' === enemy){
@@ -224,11 +230,38 @@ const GameScreen = () => {
             return CAR
         }
     };
-
     var Enemy = showEnemy();
 
 
+    //答える単語の文字に該当している画像をキャンバスに重ねる
+    var currentLetter = vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb);
+    const letterImage  = () => {
+        if ('A' === currentLetter){
+            return A
+        }else if('B' === currentLetter){
+            return B
+        }else if('C' === currentLetter){
+            return C
+        }else{
+            return R
+        };
+    };
+    var LetterPose:string = letterImage();
 
+    // ポーズアシスト用のキャンバス
+    const canvas = document.getElementById("pose") as HTMLCanvasElement;        
+    let imagePath = LetterPose;
+    draw(canvas,imagePath);
+    function draw(canvas:HTMLCanvasElement,imagePath:string|null){
+        const image = new Image();
+        image.addEventListener("load", async ()=>{ 
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            const ctx = canvas.getContext("2d")!;
+            ctx.drawImage(image, 0, 0,);
+        });
+        image.src = imagePath!;
+    };
 
 
     return(
@@ -265,8 +298,12 @@ const GameScreen = () => {
                                 }}
                                 style={styles.camera}
                             />
+                    {isStart && 
+                        <canvas id="pose" style={styles.pose}></canvas>
+                    }
                     {isScreenShot ?
                         <>
+                            {/* <canvas id="pose" style={styles.pose}></canvas> */}
                             <canvas id="canvas" style={styles.canvas}></canvas>
                         </>
                         :
@@ -358,7 +395,7 @@ const GameScreen = () => {
 
 const styles: {[key: string] : React.CSSProperties} = {
     mainScreen:{
-        border:'solid',
+        // border:'solid',
         display: "flex", 
         margin:0,
         padding:0, 
@@ -375,7 +412,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin:0,
         padding:0, 
         position: 'relative',
-        border: "solid",
+        // border: "solid",
         display: 'flex',
         flexFlow: "column",
         alignItems: "center",
@@ -400,7 +437,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         padding: 30,
         backgroundColor: 'white',
         borderRadius: 10,
-        border: 'solid',
+        // border: 'solid',
         fontSize: 40,
         fontFamily: 'monospace',
     },
@@ -420,7 +457,7 @@ const styles: {[key: string] : React.CSSProperties} = {
     },
     cameraArea:{
         position:"relative",
-        border: 'solid',
+        // border: 'solid',
         padding:0,
         margin:0,
         zIndex: 10
@@ -430,6 +467,22 @@ const styles: {[key: string] : React.CSSProperties} = {
         margin:0,
         paddingLeft:0,
         transform: 'scale(-1,1)',
+    },
+    pose:{
+        margin:0,
+        paddingLeft:0,
+        // border:"solid",
+        borderColor:"red",
+        position: 'absolute',
+        display:'flex',
+        top: 0,
+        right: 0,
+        width:'100%',
+        height:'100%',
+        opacity:'80%',
+        
+        // backgroundColor:'red',
+        // display: 'none',
     },
     canvas:{
         margin:0,
@@ -451,7 +504,7 @@ const styles: {[key: string] : React.CSSProperties} = {
     },
 
     rightScreen:{
-        border:'solid',
+        // border:'solid',
         position:"relative",
         flex: 1,
         margin:0,
@@ -465,7 +518,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         position:"relative",
         width:'80vh',
         height:'60vh',
-        border:"solid",
+        // border:"solid",
         margin: 5,
         padding:10,
         backgroundColor:'gray',
