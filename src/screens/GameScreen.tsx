@@ -3,17 +3,19 @@ import { useStopwatch } from "react-timer-hook";
 import { useNavigate } from 'react-router-dom';
 import useSound from "use-sound";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
-// import Camera from "../components/GameScreen/Camera";
+import finishImg from '../utils/images/pose/congladuration.gif'
 import Webcam from "react-webcam";
 import Calculation from "../components/GameScreen/JointCal";
 import CorrectJudge from "../components/GameScreen/CorrectJudge";
 import Prepare from "../components/GameScreen/Prepare";
 import MakeQ from "../components/GameScreen/Question/MakeQ";
-// import Timer from "../components/GameScreen/Timer";
 
-import corSe from "../utils/sounds/corSe.mp3" ;//正解音（ピンポーン）
-import corSe2 from "../utils/sounds/corSe2.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
-import uncorSe from "../utils/sounds/uncorSe.mp3";//不正解音（ブッ）
+
+import corSe from "../utils/sounds/currrect.mp3" ;//正解音（ピンポーン）
+import corSe2 from "../utils/sounds/nextQuestion.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
+import uncorSe from "../utils/sounds/unCor.mp3";//不正解音（ブッ）
+import ButtonSE2 from "../utils/sounds/button2.mp3";
+import Pause from "../utils/sounds/select09.mp3";
 
 import APPLE from "../utils/images/enemy/APPLE.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
 import BALL from "../utils/images/enemy/BALL.png";
@@ -22,6 +24,9 @@ import A from "../utils/images/pose/A.png";
 import B from "../utils/images/pose/B.png";
 import C from "../utils/images/pose/C.png";
 import R from "../utils/images/pose/R.png";
+import L from "../utils/images/pose/L.png";
+import E from "../utils/images/pose/E.png";
+import P from "../utils/images/pose/P.png";
 
 
 let { vocabulary, questionOrder } = MakeQ(); // 問題と出題順番の生成
@@ -102,6 +107,10 @@ const GameScreen = () => {
     const [playCorSe] = useSound(corSe); //1文字正解音
     const [playCorSe2] = useSound(corSe2); //任意の単語の最後の文字を答えた時に鳴る
     const [playUncorSe] = useSound(uncorSe); //不正解音
+    const [playButton2] = useSound(ButtonSE2);
+    const [playPAUSE] = useSound(Pause);
+    
+
     //camera 
     const capture = useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot();
@@ -165,6 +174,7 @@ const GameScreen = () => {
     }
 
     const gameStart =() =>{
+        playPAUSE();
         setIsAvailable(true);
         start(); // timerStart
         setIsStart(true); // game開始
@@ -172,6 +182,7 @@ const GameScreen = () => {
     };
     const gameStop = () => {
         pause();
+        playPAUSE();
         setIsAvailable(false);
         setIsCheckedPosition(true); //説明画面を出す
     };
@@ -241,6 +252,12 @@ const GameScreen = () => {
             return B
         }else if('C' === currentLetter){
             return C
+        }else if('E' === currentLetter){
+            return E
+        }else if('L' === currentLetter){
+            return L
+        }else if('P' === currentLetter){
+            return P
         }else{
             return R
         };
@@ -297,8 +314,12 @@ const GameScreen = () => {
                                 }}
                                 style={styles.camera}
                             />
-                    {isStart && 
-                        <canvas id="pose" style={styles.pose}></canvas>
+                    {isStart  && 
+                        <>
+                            { !isclear &&
+                                <canvas id="pose" style={styles.pose}></canvas>
+                            }
+                        </>
                     }
                     {isScreenShot ?
                         <>
@@ -337,11 +358,13 @@ const GameScreen = () => {
                                 <>
                                     {isclear ? 
                                         <>
+                                        <img src={finishImg} alt="finish" style={styles.gif}/>
                                         <h3 style={styles.clearString}>
                                             クリア!
                                         </h3>
                                         <div style={styles.resultArea}>
                                             <button onClick={() => {
+                                                playButton2();
                                                 console.log('button is pushed')
                                                 navigate('/ResultScreen')
                                                 navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})
@@ -482,7 +505,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         right: 0,
         width:'100%',
         height:'100%',
-        opacity:'80%',
+        opacity:'60%',
         
         // backgroundColor:'red',
         // display: 'none',
@@ -535,7 +558,8 @@ const styles: {[key: string] : React.CSSProperties} = {
         height:'100%',
     },
     gameContents:{
-        alignContent:"center"
+        alignContent:"center",
+        // position:"relative",
     },
     wordString:{
         position: 'fixed',
@@ -614,13 +638,14 @@ const styles: {[key: string] : React.CSSProperties} = {
         bottom: '10%'
     },
     clearString: {
-        position: 'fixed',
+        // position: 'fixed',
         bottom: '5%',
-        left: '75%',
+        right: '65%',
         transform: 'translateX(-50%)',
         fontSize:80,
         color: 'green',
         fontFamily: 'monospace',
+        zIndex:20
     },
     resultArea: {
         position: 'fixed',
@@ -640,6 +665,11 @@ const styles: {[key: string] : React.CSSProperties} = {
         height: "fit-content",
         fontFamily: 'monospace',
     },
+    gif:{
+        position:"absolute",
+        top:20,
+        zIndex:10,
+        },
     start_stop: {
         backgroundColor: 'gray',
         color: 'white',
@@ -651,7 +681,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         cursor: 'pointer',
         width: 'fit-content',
         height: "fit-content",
-    }
+    },
 }
 
 export default GameScreen;

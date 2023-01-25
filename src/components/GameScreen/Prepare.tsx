@@ -1,9 +1,14 @@
+import useSound from "use-sound";
+import ButtonSE1 from "../../utils/sounds/select09.mp3";
+
 const Prepare = (props:any) => {
 
     //ぺージ遷移時には画面の右側には案内と開始ボタンが存在．開始ボタンを押すと問題などの画面が見えるようになる．
     // const [isChecked, setIsChecked] = useState<boolean>(true);
 
+    const [playButton1] = useSound(ButtonSE1);
     const startGame = () => {
+        playButton1();
         props.setIsCheckedPosition(false);
     };
 
