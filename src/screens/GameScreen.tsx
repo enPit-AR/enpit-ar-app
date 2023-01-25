@@ -3,17 +3,19 @@ import { useStopwatch } from "react-timer-hook";
 import { useNavigate } from 'react-router-dom';
 import useSound from "use-sound";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
-// import Camera from "../components/GameScreen/Camera";
 import Webcam from "react-webcam";
 import Calculation from "../components/GameScreen/JointCal";
 import CorrectJudge from "../components/GameScreen/CorrectJudge";
 import Prepare from "../components/GameScreen/Prepare";
 import MakeQ from "../components/GameScreen/Question/MakeQ";
-// import Timer from "../components/GameScreen/Timer";
 
-import corSe from "../utils/sounds/corSe.mp3" ;//正解音（ピンポーン）
-import corSe2 from "../utils/sounds/corSe2.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
-import uncorSe from "../utils/sounds/uncorSe.mp3";//不正解音（ブッ）
+
+import corSe from "../utils/sounds/currrect.mp3" ;//正解音（ピンポーン）
+import corSe2 from "../utils/sounds/nextQuestion.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
+import uncorSe from "../utils/sounds/unCor.mp3";//不正解音（ブッ）
+import ButtonSE1 from "../utils/sounds/button1.mp3";
+import ButtonSE2 from "../utils/sounds/button2.mp3";
+import Pause from "../utils/sounds/select09.mp3";
 
 import APPLE from "../utils/images/enemy/APPLE.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
 import BALL from "../utils/images/enemy/BALL.png";
@@ -105,6 +107,10 @@ const GameScreen = () => {
     const [playCorSe] = useSound(corSe); //1文字正解音
     const [playCorSe2] = useSound(corSe2); //任意の単語の最後の文字を答えた時に鳴る
     const [playUncorSe] = useSound(uncorSe); //不正解音
+    const [playButton1] = useSound(ButtonSE1);
+    const [playButton2] = useSound(ButtonSE2);
+    const [playPAUSE] = useSound(Pause);
+    
 
     //camera 
     const capture = useCallback(() => {
@@ -169,6 +175,7 @@ const GameScreen = () => {
     }
 
     const gameStart =() =>{
+        playPAUSE();
         setIsAvailable(true);
         start(); // timerStart
         setIsStart(true); // game開始
@@ -176,6 +183,7 @@ const GameScreen = () => {
     };
     const gameStop = () => {
         pause();
+        playPAUSE();
         setIsAvailable(false);
         setIsCheckedPosition(true); //説明画面を出す
     };
@@ -356,6 +364,7 @@ const GameScreen = () => {
                                         </h3>
                                         <div style={styles.resultArea}>
                                             <button onClick={() => {
+                                                playButton2();
                                                 console.log('button is pushed')
                                                 navigate('/ResultScreen')
                                                 navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})

@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import '../styles/BackgroundColor.css';
+import useSound from "use-sound";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
-// import ReturnButton from "../components/Common/ReturnButton ";
+import ButtonSE1 from "../utils/sounds/button1.mp3";
+import ButtonSE2 from "../utils/sounds/button2.mp3";
 
 const StartScreen = () => {
+    const [playButton1] = useSound(ButtonSE1);
+    const [playButton2] = useSound(ButtonSE2);
     const navigate = useNavigate();
     return (
         <>
@@ -17,12 +21,14 @@ const StartScreen = () => {
                 </div>
                 <div style={styles.startArea}>
                     <button onClick={() => {
+                        playButton1();
                         console.log('button is pushed')
                         navigate('/GameScreen')
                         }} style={styles.start_button}><strong>スタート</strong></button>
                 </div>
                 <div style={styles.explainArea}>
                     <button onClick={() => {
+                        playButton2();
                         console.log('button is pushed')
                         navigate('/ExplainScreen')
                         // 遊び方説明

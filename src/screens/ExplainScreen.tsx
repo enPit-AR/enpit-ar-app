@@ -14,8 +14,11 @@ import image5_2 from '../utils/images/tutorial/player_motion_5.png';
 import image6_1 from '../utils/images/tutorial/screen_motion_6_correct.png';
 import image6_2 from '../utils/images/tutorial/screen_motion_6_uncorrect.png';
 import image7_1 from '../utils/images/tutorial/screen_motion_7_correct.png';
+import Pause from "../utils/sounds/select09.mp3";
+import useSound from "use-sound";
 
 const ExplainScreen = () => {
+    const [playPAUSE] = useSound(Pause);
     const navigate = useNavigate();
     return(
         <div>
@@ -25,6 +28,7 @@ const ExplainScreen = () => {
                 <div style={styles.header}>
                     <div style={styles.buttonArea}>
                         <button onClick={() => {
+                            playPAUSE();
                             console.log('button is pushed')
                             navigate('/')
                             }} style={styles.backButton}><strong>＜もどる</strong></button>
