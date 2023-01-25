@@ -22,6 +22,9 @@ import A from "../utils/images/pose/A.png";
 import B from "../utils/images/pose/B.png";
 import C from "../utils/images/pose/C.png";
 import R from "../utils/images/pose/R.png";
+import L from "../utils/images/pose/L.png";
+import E from "../utils/images/pose/E.png";
+import P from "../utils/images/pose/P.png";
 
 
 let { vocabulary, questionOrder } = MakeQ(); // 問題と出題順番の生成
@@ -242,6 +245,12 @@ const GameScreen = () => {
             return B
         }else if('C' === currentLetter){
             return C
+        }else if('E' === currentLetter){
+            return E
+        }else if('L' === currentLetter){
+            return L
+        }else if('P' === currentLetter){
+            return P
         }else{
             return R
         };
@@ -298,8 +307,12 @@ const GameScreen = () => {
                                 }}
                                 style={styles.camera}
                             />
-                    {isStart && 
-                        <canvas id="pose" style={styles.pose}></canvas>
+                    {isStart  && 
+                        <>
+                            { !isclear &&
+                                <canvas id="pose" style={styles.pose}></canvas>
+                            }
+                        </>
                     }
                     {isScreenShot ?
                         <>
@@ -480,7 +493,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         right: 0,
         width:'100%',
         height:'100%',
-        opacity:'80%',
+        opacity:'60%',
         
         // backgroundColor:'red',
         // display: 'none',
@@ -533,7 +546,8 @@ const styles: {[key: string] : React.CSSProperties} = {
         height:'100%',
     },
     gameContents:{
-        alignContent:"center"
+        alignContent:"center",
+        // position:"relative",
     },
     wordString:{
         position: 'fixed',
@@ -612,9 +626,9 @@ const styles: {[key: string] : React.CSSProperties} = {
         bottom: '10%'
     },
     clearString: {
-        position: 'fixed',
+        // position: 'fixed',
         bottom: '5%',
-        left: '75%',
+        right: '65%',
         transform: 'translateX(-50%)',
         fontSize:80,
         color: 'green',
