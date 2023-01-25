@@ -3,6 +3,7 @@ import { useStopwatch } from "react-timer-hook";
 import { useNavigate } from 'react-router-dom';
 import useSound from "use-sound";
 import bgImage from '../utils/images/common/StartScreenBack.gif';
+import finishImg from '../utils/images/pose/congladuration.gif'
 import Webcam from "react-webcam";
 import Calculation from "../components/GameScreen/JointCal";
 import CorrectJudge from "../components/GameScreen/CorrectJudge";
@@ -13,7 +14,6 @@ import MakeQ from "../components/GameScreen/Question/MakeQ";
 import corSe from "../utils/sounds/currrect.mp3" ;//正解音（ピンポーン）
 import corSe2 from "../utils/sounds/nextQuestion.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
 import uncorSe from "../utils/sounds/unCor.mp3";//不正解音（ブッ）
-import ButtonSE1 from "../utils/sounds/button1.mp3";
 import ButtonSE2 from "../utils/sounds/button2.mp3";
 import Pause from "../utils/sounds/select09.mp3";
 
@@ -107,7 +107,6 @@ const GameScreen = () => {
     const [playCorSe] = useSound(corSe); //1文字正解音
     const [playCorSe2] = useSound(corSe2); //任意の単語の最後の文字を答えた時に鳴る
     const [playUncorSe] = useSound(uncorSe); //不正解音
-    const [playButton1] = useSound(ButtonSE1);
     const [playButton2] = useSound(ButtonSE2);
     const [playPAUSE] = useSound(Pause);
     
@@ -359,6 +358,7 @@ const GameScreen = () => {
                                 <>
                                     {isclear ? 
                                         <>
+                                        <img src={finishImg} alt="finish" style={styles.gif}/>
                                         <h3 style={styles.clearString}>
                                             クリア!
                                         </h3>
@@ -642,6 +642,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         fontSize:80,
         color: 'green',
         fontFamily: 'monospace',
+        zIndex:20
     },
     resultArea: {
         position: 'fixed',
@@ -661,6 +662,11 @@ const styles: {[key: string] : React.CSSProperties} = {
         height: "fit-content",
         fontFamily: 'monospace',
     },
+    gif:{
+        position:"absolute",
+        top:20,
+        zIndex:10,
+    }
 }
 
 export default GameScreen;
