@@ -6,5 +6,16 @@
         "Words": "CAR",
         "Level": 1,
         "Point": 4
-    }]
+    },
+    {
+        "Words": "APPLE",
+        "Level": 1,
+        "Point": 4
+    },
+    {
+        "Words": "BALL",
+        "Level": 1,
+        "Point": 4
+    }
+]
 }
