@@ -398,9 +398,9 @@ const GameScreen = () => {
                                 {!isclear ? 
                                   <>
                                       {!isAvailable ? (
-                                          <button onClick={gameStart}>スタート</button>
+                                          <button onClick={gameStart} style={styles.start_stop}>スタート</button>
                                           ) : (
-                                          <button onClick={gameStop}>ストップ</button>
+                                          <button onClick={gameStop} style={styles.start_stop}>ストップ</button>
                                       )}
                                   </>
                                    :
@@ -474,7 +474,10 @@ const styles: {[key: string] : React.CSSProperties} = {
         fontFamily: 'monospace',
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 10,
+        paddingTop: 1,
+        paddingBottom: 1,
+        paddingRight: 20,
+        paddingLeft: 20,
         color: 'red',
         border: 'solid black',
     },
@@ -666,7 +669,19 @@ const styles: {[key: string] : React.CSSProperties} = {
         position:"absolute",
         top:20,
         zIndex:10,
-    }
+        },
+    start_stop: {
+        backgroundColor: 'gray',
+        color: 'white',
+        borderRadius: 10,
+        border: 'solid black',
+        fontSize: 30,
+        paddingRight: 30,
+        paddingLeft: 30,
+        cursor: 'pointer',
+        width: 'fit-content',
+        height: "fit-content",
+    },
 }
 
 export default GameScreen;
