@@ -398,7 +398,7 @@ const GameScreen = () => {
                                 {!isclear ? 
                                   <>
                                       {!isAvailable ? (
-                                          <button onClick={gameStart} style={styles.start_stop}>スタート</button>
+                                          <button onClick={gameStart} style={styles.startButton}>スタート</button>
                                           ) : (
                                           <button onClick={gameStop} style={styles.start_stop}>ストップ</button>
                                       )}
@@ -470,7 +470,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         top: '0%',
         left: '25%',
         transform: 'translateX(-50%)',
-        fontSize: 80,
+        fontSize: 60,
         fontFamily: 'monospace',
         backgroundColor: 'white',
         borderRadius: 10,
@@ -671,7 +671,7 @@ const styles: {[key: string] : React.CSSProperties} = {
         zIndex:10,
         },
     start_stop: {
-        backgroundColor: 'gray',
+        backgroundColor: 'red',
         color: 'white',
         borderRadius: 10,
         border: 'solid black',
@@ -681,6 +681,21 @@ const styles: {[key: string] : React.CSSProperties} = {
         cursor: 'pointer',
         width: 'fit-content',
         height: "fit-content",
+    },
+    startButton:{
+        position:"absolute",
+        backgroundColor: 'red',
+        color: 'white',
+        borderRadius: 10,
+        border: 'solid black',
+        fontSize: 30,
+        paddingRight: 30,
+        paddingLeft: 30,
+        cursor: 'pointer',
+        width: 'fit-content',
+        height: "fit-content",
+        bottom:'10%',
+        right:'35%'
     },
 }
 
