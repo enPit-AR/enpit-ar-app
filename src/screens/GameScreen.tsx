@@ -10,12 +10,23 @@ import CorrectJudge from "../components/GameScreen/CorrectJudge";
 import Prepare from "../components/GameScreen/Prepare";
 import MakeQ from "../components/GameScreen/Question/MakeQ";
 
-
-import corSe from "../utils/sounds/currrect.mp3" ;//正解音（ピンポーン）
-import corSe2 from "../utils/sounds/nextQuestion.mp3";//正解音２→ 任意の単語の最後の文字を答えた時に鳴る（ピンポンピンポーン）
-import uncorSe from "../utils/sounds/unCor.mp3";//不正解音（ブッ）
-import ButtonSE2 from "../utils/sounds/button2.mp3";
-import Pause from "../utils/sounds/select09.mp3";
+//お試し///
+import cor1 from "../utils/se/cor1.mp3" ;
+import cor2 from "../utils/se/cor2.mp3" ;
+import cor3 from "../utils/se/cor3.mp3" ;
+import cor4 from "../utils/se/cor4.mp3" ;
+import cor5 from "../utils/se/cor5.mp3" ;
+import unCor1 from "../utils/se/unCor1.mp3" ;
+import unCor2 from "../utils/se/unCor2.mp3" ;
+import unCor3 from "../utils/se/unCor3.mp3" ;
+import unCor4 from "../utils/se/unCor4.mp3" ;
+import countDown from "../utils/se/countDown.mp3" ;
+import stop from "../utils/se/stop.mp3" ;
+import start1 from "../utils/se/start.mp3" ;
+//import result from "../utils/se/result.mp3" ;
+// import finish from "../utils/se/finish.mp3" ;
+import goResult from "../utils/se/GoResult.mp3" ;
+import next from "../utils/se/nextQ.mp3";
 
 import APPLE from "../utils/images/enemy/APPLE.png"; //敵画像の読み込み→ファイルから読み込むスタイルに変更
 import BALL from "../utils/images/enemy/BALL.png";
@@ -104,11 +115,60 @@ const GameScreen = () => {
     const [ isAvailable, setIsAvailable ] = useState<boolean>(false); //次のイベントが使用できる状態か
     const [countdown, setCountdown] = useState<number>(3); //キャプチャまでのカウントダウン
 
-    const [playCorSe] = useSound(corSe); //1文字正解音
-    const [playCorSe2] = useSound(corSe2); //任意の単語の最後の文字を答えた時に鳴る
-    const [playUncorSe] = useSound(uncorSe); //不正解音
-    const [playButton2] = useSound(ButtonSE2);
-    const [playPAUSE] = useSound(Pause);
+    // const [playCorSe] = useSound(corSe); //1文字正解音
+    // const [playCorSe2] = useSound(corSe2); //任意の単語の最後の文字を答えた時に鳴る
+    // const [playUncorSe] = useSound(uncorSe); //不正解音
+    // const [playButton2] = useSound(ButtonSE2);
+    // const [playPAUSE] = useSound(Pause);
+
+    //sample//
+    const [playCor1] = useSound(cor1);
+    const [playCor2] = useSound(cor2);
+    const [playCor3] = useSound(cor3);
+    const [playCor4] = useSound(cor4);
+    const [playCor5] = useSound(cor5);
+    const [playUnCor1] = useSound(unCor1);
+    const [playUnCor2] = useSound(unCor2);
+    const [playUnCor3] = useSound(unCor3);
+    const [playUnCor4] = useSound(unCor4);
+    const [playStop] = useSound(stop);
+    const [playStart1] = useSound(start1);
+    const [playCountDown] = useSound(countDown);
+    // const [playResult] = useSound(result);
+    // const [playFinish] = useSound(finish);
+    const [playGoResult] = useSound(goResult);
+    const [playNextQ] = useSound(next);
+    //sample//
+
+    //retrun random se 
+    const playRandomCorSE = () => {
+        const random_num:number = Math.random();
+        if (random_num <= 1/5){
+            return playCor1();
+        } else if (random_num <= 2/5){
+            return playCor2();
+        } else if (random_num <= 3/5){
+            return playCor3();
+        } else if (random_num <= 4/5){
+            return playCor4();
+        } else {
+            return playCor5();
+        }
+    };
+
+    const playRandomUnCorSE = () => {
+        const random_num:number = Math.random();
+        if (random_num <= 1/4){
+            return playUnCor1();
+        } else if (random_num <= 2/4){
+            return playUnCor2();
+        } else if (random_num <= 3/4){
+            return playUnCor3();
+        } else {
+            return playUnCor4();
+        }
+    };
+
     
 
     //camera 
@@ -147,12 +207,17 @@ const GameScreen = () => {
     useInterval(
         () => {
             setCountdown(prevState => prevState -1)
+            if(countdown === 4){
+                playCountDown()
+                start() //タイマー再開
+            }
             if (countdown === 3){
                 changeScreenShotFlag();
             } else if (countdown === 0){
-                setCountdown(3)
+                setCountdown(6)
                 captureCalc();
                 judgeCamera();
+                pause() //写真撮ると一時タイマーを止める
                 // setIsAvailable(false);
             }
         },
@@ -174,7 +239,7 @@ const GameScreen = () => {
     }
 
     const gameStart =() =>{
-        playPAUSE();
+        playStart1();
         setIsAvailable(true);
         start(); // timerStart
         setIsStart(true); // game開始
@@ -182,12 +247,10 @@ const GameScreen = () => {
     };
     const gameStop = () => {
         pause();
-        playPAUSE();
+        playStop();
         setIsAvailable(false);
         setIsCheckedPosition(true); //説明画面を出す
     };
-
-    
 
     //不正解なら不正解の表示と音声
     //正解なら正解エフェクトを出して次の文字へ．
@@ -198,17 +261,18 @@ const GameScreen = () => {
             if (corNmb >= vocabulary[questionOrder[nmb]].Words.length) {
                 increment();
                 setCorNmb(1);
-                playCorSe2();
+                playNextQ();
                 if (nmb+1 === vocabulary.length) {
                     setIsclear(true);
+                    setIsAvailable(false);
                     pause();
                 }
             } else {
-                playCorSe();
+                playRandomCorSE();
             }
         } else {
             showUncor();
-            playUncorSe();
+            playRandomUnCorSE();
         }
     };
 
@@ -291,7 +355,9 @@ const GameScreen = () => {
 
                         {!isclear ? 
                         <>
-                            <h2 style={styles.count3}>{countdown}</h2>
+                            {countdown <= 3 &&
+                                <h2 style={styles.count3}>{countdown}</h2>
+                            }
                             <h1 style={styles.word}>{vocabulary[questionOrder[nmb]].Words.slice(corNmb-1, corNmb)}</h1>
                         </>
                         :
@@ -341,20 +407,6 @@ const GameScreen = () => {
                         <>
                         {/* ここにゲームコンテンツの要素を入れていく */}
                             <div style={styles.gameContents}>
-                                {/* gamestart */}
-                                {!isclear ? 
-                                    <>
-                                        {/* <button onClick={gameStart} style={styles.startButton}>スタート</button> */}
-                                    </>
-                                    :
-                                    <></>
-                                }
-                                {/* canvas delete */}
-                                {/* <button onClick={changeScreenShotFlag}>delete</button> */}
-
-
-                                
-                                
                                 <>
                                     {isclear ? 
                                         <>
@@ -364,7 +416,7 @@ const GameScreen = () => {
                                         </h3>
                                         <div style={styles.resultArea}>
                                             <button onClick={() => {
-                                                playButton2();
+                                                playGoResult();
                                                 console.log('button is pushed')
                                                 navigate('/ResultScreen')
                                                 navigate("/ResultScreen",{ state: {min: ('00' + minutes).slice(-2), sec: ('00' + seconds).slice(-2)}})

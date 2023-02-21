@@ -5,12 +5,14 @@ import bgImage from '../utils/images/common/StartScreenBack.gif';
 import Confetti from 'react-confetti';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import Result from "../utils/sounds/resultSound.mp3";
-import ButtonSE1 from "../utils/sounds/select09.mp3";
+import GoHome from "../utils/se/GoHome.mp3";
+//import ButtonSE1 from "../utils/sounds/select09.mp3";
 import useSound from "use-sound";
 
 const ResultScreen = () => {
     const [playResult] = useSound(Result);
-    const [playButton1] = useSound(ButtonSE1);
+    // const [playButton1] = useSound(ButtonSE1);
+    const [playGoHome] = useSound(GoHome);
     const { width, height } = useWindowSize()
     const navigate = useNavigate();
     const location = useLocation();
@@ -41,7 +43,7 @@ const ResultScreen = () => {
                     <button onClick={() => {
                             console.log('button is pushed')
                             navigate('/')
-                            playButton1();
+                            playGoHome();
                             }} style={styles.backButton}><strong>トップへ</strong></button>
                 </div>
             </div>
